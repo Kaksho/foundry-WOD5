@@ -6,7 +6,7 @@ import { rollBasicDice } from './roll-basic-dice.js'
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
- * @extends {CoterieActorSheet}
+ * @extends {ActorSheet}
  */
 
 export class SPCActorSheet extends CoterieActorSheet {
@@ -53,8 +53,20 @@ export class SPCActorSheet extends CoterieActorSheet {
     const data = await super.getData()
     // TODO: confirm that I can finish and use this list
     data.sheetType = `${game.i18n.localize('VTM5E.SPC')}`
+	
+	data.dtypes = ['String', 'Number', 'Boolean']
+   
+   
+    // Encrich editor content
+//    data.enrichedTenets = await TextEditor.enrichHTML(this.object.system.headers.tenets, { async: true })
+//    data.enrichedTouchstones = await TextEditor.enrichHTML(this.object.system.headers.touchstones, { async: true })
+//    data.enrichedBane = await TextEditor.enrichHTML(this.object.system.headers.bane, { async: true })
+//    data.enrichedBiography = await TextEditor.enrichHTML(this.object.system.biography, { async: true })
+//    data.enrichedAppearance = await TextEditor.enrichHTML(this.object.system.appearance, { async: true })
+//    data.enrichedNotes = await TextEditor.enrichHTML(this.object.system.notes, { async: true })
+//    data.enrichedEquipment = await TextEditor.enrichHTML(this.object.system.equipment, { async: true })
 
-    // Prepare items.
+   // Prepare items.
     if (this.actor.type === 'spc') {
       this._prepareItems(data)
     }
@@ -70,7 +82,7 @@ export class SPCActorSheet extends CoterieActorSheet {
      * @override
      */
   _prepareItems (sheetData) {
-    super._prepareItems(sheetData)
+//  super._prepareItems(sheetData)
     const actorData = sheetData.actor
   }
 
@@ -79,8 +91,7 @@ export class SPCActorSheet extends CoterieActorSheet {
   /** @override */
   activateListeners (html) {
     super.activateListeners(html)
-
-    this._setupDotCounters(html)
+	this._setupDotCounters(html)
     this._setupSquareCounters(html)
 
     // Everything below here is only needed if the sheet is editable
@@ -305,16 +316,16 @@ export class SPCActorSheet extends CoterieActorSheet {
     const dataset = element.dataset
     const resource = dataset.resource
     if (dataset.action === 'plus' && !this.locked) {
-     actorData.system[resource].max++
+		actorData.system[resource].max++
     } else if (dataset.action === 'minus' && !this.locked) {
-     actorData.system[resource].max = Math.max(actorData.system[resource].max - 1, 0)
+		actorData.system[resource].max = Math.max(actorData.system[resource].max - 1, 0)
     }
 
     if (actorData.system[resource].aggravated + actorData.system[resource].superficial > actorData.system[resource].max) {
-     actorData.system[resource].aggravated = actorData.system[resource].max -actorData.system[resource].superficial
-      if (actorData.system[resource].aggravated <= 0) {
-       actorData.system[resource].aggravated = 0
-       actorData.system[resource].superficial = actorData.system[resource].max
+		actorData.system[resource].aggravated = actorData.system[resource].max -actorData.system[resource].superficial
+		if (actorData.system[resource].aggravated <= 0) {
+			actorData.system[resource].aggravated = 0
+			actorData.system[resource].superficial = actorData.system[resource].max
       }
     }
     this.actor.update(actorData)
