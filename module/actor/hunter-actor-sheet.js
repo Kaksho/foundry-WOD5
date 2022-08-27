@@ -55,8 +55,10 @@ export class HunterActorSheet extends CellActorSheet {
     data.sheetType = `${game.i18n.localize('VTM5E.Hunter')}`
 
     // Prepare items.
-    if (this.actor.type === 'hunter') {
-      this._prepareItems(data)
+    if (this.actor.type === 'hunter' ||
+	this.actor.type === 'character'
+	) {
+		this._prepareItems(data)
     }
 
     return data
@@ -71,7 +73,8 @@ export class HunterActorSheet extends CellActorSheet {
      */
   _prepareItems (sheetData) {
     super._prepareItems(sheetData)
-    const actorData = sheetData.actor
+    
+	const actorData = sheetData.actor
 
     const edges = {
       arsenal: [],
@@ -235,8 +238,7 @@ export class HunterActorSheet extends CellActorSheet {
             <input type="text" min="0" id="inputDif" value="0">
         </div>
     </form>`
-
-    let buttons = {}
+	    let buttons = {}
     buttons = {
       draw: {
         icon: '<i class="fas fa-check"></i>',
@@ -244,12 +246,91 @@ export class HunterActorSheet extends CellActorSheet {
         callback: async (html) => {
           const ability = html.find('#abilitySelect')[0].value
           const modifier = parseInt(html.find('#inputMod')[0].value || 0)
+		  const modifier2 = modifier + 1
           const desperationDice = parseInt(html.find('#inputDespMod')[0].value || 0)
           const difficulty = parseInt(html.find('#inputDif')[0].value || 0)
           const abilityVal = this.actor.system.abilities[ability].value
           const abilityName = game.i18n.localize(this.actor.system.abilities[ability].name)
           const numDice = abilityVal + parseInt(dataset.roll) + modifier
           rollHunterDice(numDice, this.actor, `${dataset.label} + ${abilityName}`, difficulty, desperationDice, this.hunger)
+        }
+      },
+      cancel: {
+        icon: '<i class="fas fa-times"></i>',
+        label: game.i18n.localize('VTM5E.Cancel')
+      }
+    }
+
+    new Dialog({
+      title: game.i18n.localize('VTM5E.Rolling') + ` ${dataset.label}...`,
+      content: template,
+      buttons: buttons,
+      default: 'draw'
+    }).render(true)
+  }
+
+ _onRollDialog2 (event) {
+    event.preventDefault()
+    const element = event.currentTarget
+    const dataset = element.dataset
+    let options = ''
+
+    for (const [key, value] of Object.entries(this.actor.system.abilities)) {
+      options = options.concat(`<option value="${key}">${game.i18n.localize(value.name)}</option>`)
+    }
+
+    const despair = Object.values(this.actor.system.despair)
+    const despairstring = despair.toString()
+    
+    if (despairstring === '1') {
+      var despairoutcome = true
+    } else {
+      var despairoutcome = false
+    }
+    
+    const template = despairoutcome ? 
+    `<form>
+        <div class="form-group">
+            <label>${game.i18n.localize('VTM5E.Modifier')}</label>
+            <input type="text" id="inputMod" value="0">
+        </div>
+        <div class="form-group">
+            <label>${game.i18n.localize('VTM5E.DesperationUnavailable')}</label>
+            <input type="text" min="0" id="inputDespMod" disabled value="0">
+        </div>
+        <div class="form-group">
+            <label>${game.i18n.localize('VTM5E.Difficulty')}</label>
+            <input type="text" min="0" id="inputDif" value="0">
+        </div>
+    </form>` :
+    `<form>
+        <div class="form-group">
+            <label>${game.i18n.localize('VTM5E.Modifier')}</label>
+            <input type="text" id="inputMod" value="0">
+        </div>
+        <div class="form-group">
+            <label>${game.i18n.localize('VTM5E.DesperationDice')}</label>
+            <input type="text" min="0" id="inputDespMod" value="0">
+        </div>
+        <div class="form-group">
+            <label>${game.i18n.localize('VTM5E.Difficulty')}</label>
+            <input type="text" min="0" id="inputDif" value="0">
+        </div>
+    </form>`
+      let buttons = {}
+    buttons = {
+      draw: {
+        icon: '<i class="fas fa-check"></i>',
+        label: game.i18n.localize('VTM5E.Roll'),
+        callback: async (html) => {
+          const modifier = parseInt(html.find('#inputMod')[0].value || 0)
+          const modifier2 = modifier + 1
+		  const desperationDice = parseInt(html.find('#inputDespMod')[0].value || 0)
+          const difficulty = parseInt(html.find('#inputDif')[0].value || 0)
+          const dice1 = this.actor.system.abilities[dataset.dice1.toLowerCase()].value
+		  const dice2 = this.actor.system.skills[dataset.dice2.toLowerCase()].value
+		  const dicePool = dice1 + dice2 + modifier
+		  rollHunterDice(dicePool, this.actor, `${dataset.name}`, difficulty, desperationDice, this.hunger)
         }
       },
       cancel: {
@@ -295,7 +376,10 @@ export class HunterActorSheet extends CellActorSheet {
       const dice1 = this.actor.system.abilities[dataset.dice1.toLowerCase()].value
       const dice2 = this.actor.system.skills[dataset.dice2.toLowerCase()].value
       const dicePool = dice1 + dice2
-      rollHunterDice(dicePool, this.actor, `${dataset.name}`, 0, desperationDice, this.hunger)
+	  const desperationDice = 0
+	  this._onRollDialog2(event)
+
+//      rollHunterDice(dicePool, this.actor, `${dataset.name}`, 0, desperationDice, this.hunger)
     }
   }
 
