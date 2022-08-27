@@ -21,7 +21,7 @@ export async function rollDice (numDice, actor, label = '', difficulty = 0, useH
   // Roll defining and evaluating
   const dice = numDice - hungerDice
   const roll = new Roll(dice + 'dvcs>5 + ' + hungerDice + 'dgcs>5', actor.system)
- await roll.evaluate({ async: true })
+  await roll.evaluate({ async: true })
 
   // Variable defining
   let difficultyResult = '<span></span>'
@@ -150,7 +150,7 @@ export async function rollDice (numDice, actor, label = '', difficulty = 0, useH
         const newHunger = actor.system.hunger.value + 1
 
         // Push it to the actor's sheet
-        actor.update({ 'data.hunger.value': newHunger })
+        actor.update({ 'system.hunger.value': newHunger })
       }
     }
   }

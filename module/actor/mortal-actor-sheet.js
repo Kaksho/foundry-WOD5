@@ -1,4 +1,4 @@
-/* global DEFAULT_TOKEN, Dialog, duplicate, game, mergeObject */
+/* global DEFAULT_TOKEN, Dialog, duplicate, game, mergeObject, TextEditor */
 
 // Export this function to be used in other scripts
 import { CoterieActorSheet } from './coterie-actor-sheet.js'
@@ -351,16 +351,16 @@ export class MortalActorSheet extends CoterieActorSheet {
     const dataset = element.dataset
     const resource = dataset.resource
     if (dataset.action === 'plus' && !this.locked) {
-     actorData.system[resource].max++
-    } else if (dataset.action === 'minus' && !this.locked) {
-     actorData.system[resource].max = Math.max(actorData.system[resource].max - 1, 0)
+		actorData.system[resource].max++
+	} else if (dataset.action === 'minus' && !this.locked) {
+		actorData.system[resource].max = Math.max(actorData.system[resource].max - 1, 0)
     }
 
     if (actorData.system[resource].aggravated + actorData.system[resource].superficial > actorData.system[resource].max) {
-     actorData.system[resource].aggravated = actorData.system[resource].max -actorData.system[resource].superficial
-      if (actorData.system[resource].aggravated <= 0) {
-       actorData.system[resource].aggravated = 0
-       actorData.system[resource].superficial = actorData.system[resource].max
+		actorData.system[resource].aggravated = actorData.system[resource].max -actorData.system[resource].superficial
+		if (actorData.system[resource].aggravated <= 0) {
+			actorData.system[resource].aggravated = 0
+			actorData.system[resource].superficial = actorData.system[resource].max
       }
     }
     this.actor.update(actorData)

@@ -187,7 +187,7 @@ export class CellActorSheet extends ActorSheet {
     const fields = data.name.split('.')
     const steps = parent.find('.cell-resource-counter-step')
     const desperation = data.name === 'system.desperation'
-    const danger = data.name === 'data.danger'
+    const danger = data.name === 'system.danger'
     const fulls = Number(data[states['-']]) || 0
     const halfs = Number(data[states['/']]) || 0
     const crossed = Number(data[states.x]) || 0
@@ -231,7 +231,7 @@ export class CellActorSheet extends ActorSheet {
       const data = this.dataset
       const states = parseCounterStates(data.states)
       const desperation = data.name === 'system.desperation'
-      const danger = data.name === 'data.danger'
+      const danger = data.name === 'system.danger'
 
       const fulls = Number(data[states['-']]) || 0
       const halfs = Number(data[states['/']]) || 0
@@ -389,7 +389,7 @@ export class CellActorSheet extends ActorSheet {
       return `${game.i18n.localize('VTM5E.' + data.featuretype.capitalize())}`
     }
     if (type === 'power') {
-      return `${game.i18n.localize('VTM5E.' + system.discipline.capitalize())}`
+      return `${game.i18n.localize('VTM5E.' + data.discipline.capitalize())}`
     }
     if (type === 'perk') {
       return `${game.i18n.localize('VTM5E.' + data.edge.capitalize())}`

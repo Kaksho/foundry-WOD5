@@ -113,13 +113,13 @@ export class GhoulActorSheet extends MortalActorSheet {
     // Make Discipline hidden
     html.find('.discipline-delete').click(ev => {
       const data = $(ev.currentTarget)[0].dataset
-      this.actor.update({ [`system.disciplines.${system.discipline}.visible`]: false })
+      this.actor.update({ [`system.disciplines.${data.discipline}.visible`]: false })
     })
 
     // Post Discipline description to the chat
     html.find('.discipline-chat').click(ev => {
       const data = $(ev.currentTarget)[0].dataset
-      const discipline = this.actor.system.disciplines[system.discipline]
+      const discipline = this.actor.system.disciplines[data.discipline]
 
       renderTemplate('systems/wod5e/templates/actor/parts/chat-message.html', {
         name: game.i18n.localize(discipline.name),
