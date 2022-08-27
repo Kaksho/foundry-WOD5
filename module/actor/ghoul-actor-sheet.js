@@ -136,7 +136,7 @@ export class GhoulActorSheet extends MortalActorSheet {
     html.find('.item-rouse').click(ev => {
       const li = $(ev.currentTarget).parents('.item')
       const item = this.actor.getEmbeddedDocument('Item', li.data('itemId'))
-      const level = item.system.level
+      const level = actor.system.level
       const potency = this.actor.system.blood.potency
 
       const dicepool = this.potencyToRouse(potency, level)

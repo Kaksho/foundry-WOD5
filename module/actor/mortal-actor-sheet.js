@@ -357,7 +357,7 @@ export class MortalActorSheet extends CoterieActorSheet {
     }
 
     if (actorData.system[resource].aggravated + actorData.system[resource].superficial > actorData.system[resource].max) {
-		actorData.system[resource].aggravated = actorData.system[resource].max -actorData.system[resource].superficial
+		actorData.system[resource].aggravated = actorData.system[resource].max - actorData.system[resource].superficial
 		if (actorData.system[resource].aggravated <= 0) {
 			actorData.system[resource].aggravated = 0
 			actorData.system[resource].superficial = actorData.system[resource].max
