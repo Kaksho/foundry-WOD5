@@ -459,11 +459,12 @@ Hooks.on('renderSidebarTab', (app, html) => {
 
           prepareSearchableSelection('pool1', $content, options, (event) => event.target.value)
 
-          watchPool1Filters($content, options)
           options.pool1 = options.pool1 && $content.find(`#pool1 option[value=${options.pool1}]`).length > 0 ? options.pool1 : $content.find('#pool1 option').attr('value')
           prepareSearchableSelection('pool2', $content, options, (event) => event.target.value)
           options.pool2 = options.pool2 && $content.find(`#pool2 option[value=${options.pool2}]`).length > 0 ? options.pool2 : $content.find('#pool2 option').attr('value')
-          watchPool2Filters($content, options)
+          
+		  watchPool1Filters($content, options)
+		  watchPool2Filters($content, options)
 
           prepareCustomRollButton($content, options)
 
@@ -581,8 +582,8 @@ function rerollDie (roll) {
   // Theoretically I should error-check this, but there shouldn't be any
   // messages that call for a WillpowerReroll without an associated actor
   const message = game.messages.get(roll.attr('data-message-id'))
-  const speaker = game.actors.get(message.speaker.actor, {strict: true})
-  const charactertype = getProperty(speaker, 'type', {strict: true})
+  const speaker = game.actors.get(message.speaker.actor)
+  const charactertype = getProperty(speaker, 'type')
 
   // If there is at least 1 die selected and aren't any more than 3 die selected, reroll the total number of die and generate a new message.
   if ((diceSelected > 0) && (diceSelected < 4) && charactertype !== "hunter") {
@@ -608,7 +609,7 @@ function rerollDie (roll) {
 async function createVampireMacro (data, slot) {
   if (data.type !== 'Item') return
   if (!('data' in data)) return ui.notifications.warn('You can only create macro buttons for owned Items')
-  const item = system
+  const item = data.system
 
   // Create the macro command
   const command = `game.vtm5e.rollItemMacro("${item.name}");`
